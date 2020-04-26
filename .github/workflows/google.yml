@@ -46,15 +46,11 @@ jobs:
         # Set up docker to authenticate
         # via gcloud command-line tool.
         gcloud auth configure-docker
-        
-    # 그래들 빌드
-    - name: Build Gradle
-      run: |
-        ./gradlew build
-      
+
     # Build the Docker image
     - name: Build
-      run: |        
+      run: |
+        ./gradlew build
         docker build -t "$REGISTRY_HOSTNAME"/"$GKE_PROJECT"/"$IMAGE":"$GITHUB_SHA" \
           --build-arg GITHUB_SHA="$GITHUB_SHA" \
           --build-arg GITHUB_REF="$GITHUB_REF" .
@@ -63,7 +59,7 @@ jobs:
     - name: Publish
       run: |
         docker push $REGISTRY_HOSTNAME/$GKE_PROJECT/$IMAGE:$GITHUB_SHA
-        
+
     # Set up kustomize
     - name: Set up Kustomize
       run: |
